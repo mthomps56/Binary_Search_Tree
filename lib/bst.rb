@@ -26,6 +26,7 @@ class Tree
 
     mid = idx_start + (idx_end - idx_start) / 2
     self.root = Node.new(arr[mid])
+    puts root.data
 
     self.root.left = build_tree(arr, idx_start, mid - 1)
     self.root.right = build_tree(arr, mid + 1, idx_end)
@@ -44,40 +45,36 @@ class Tree
     end
   end
 
-  def traversal(node = root, &iter)
-    queue = []
-    queue << node
-    queue << node.left if node.left
-    queue << node.right if node.right
-    queue.each { |node| iter.call(node) if block_given? }
-    queue.shift
-    queue << queue[0].left unless queue[0].left.nil?
-    queue << queue[1].right unless queue[1].right.nil?
-    traversal(node, &iter)
-  end
+#  def traversal(node = root, &iter)
+#    return nil if node.nil? 
+#    queue = [node.left, node.right]
+#    iter.call(queue) if block_given?
+#  end
 
 
-  def tree_height(current = root, l_height = 0, r_height = 0)
-    return nil if root.nil? 
-    unless root.left.nil?
-      current = root
-      puts "left current: #{current}"
-      return l_height if current.nil?
-      l_height += 1
-      tree_height(current)
-    else
-      current = root.right
-      puts "right current #{current}"
-      return r_height if current.nil?
-      r_height += 1
-      tree_height(current)
-    end
-    l_height >= r_height ? (return l_height) : (return r_height)
-  end
+#  def tree_height(current = root, l_height = 0, r_height = 0)
+#    return nil if root.nil? 
+#    unless root.left.nil?
+#      current = root
+#      puts "left current: #{current}"
+#      return l_height if current.nil?
+#      l_height += 1
+#      tree_height(current)
+#    else
+#      current = root.right
+#      puts "right current #{current}"
+#      return r_height if current.nil?
+#      r_height += 1
+#      tree_height(current)
+#    end
+#    l_height >= r_height ? (return l_height) : (return r_height)
+#  end
 end
     
 arr = Array.new(50) { rand(1..100) }
 
 bst = Tree.new(arr, 0, arr.length - 1)
-bst.traversal
+
+bst.traversal { |node| puts node }
+
 
