@@ -14,17 +14,18 @@ class Node
 end
 
 class Tree
-  attr_accessor :root, :height
+  attr_accessor :root
 
   def initialize(arr, idx_start, idx_end)
     @root = build_tree(arr, 0, arr.length - 1)
-    @height = {left: 0, right: 0}
   end
 
   def build_tree(arr, idx_start, idx_end)
+    puts "array: #{arr}"
     return root if idx_end - idx_start < 1
 
     mid = idx_start + (idx_end - idx_start) / 2
+    puts "middle index: #{mid}"
     self.root = Node.new(arr[mid])
 
     self.root.left = build_tree(arr, idx_start, mid - 1)
@@ -44,21 +45,28 @@ class Tree
     end
   end
 
-#node = root, 
-  def traversal(queue = [root], &block)
+  def traverse(queue = [], &block)
+    return nil unless root
+    queue << root
+    if root.left
+      queue << root.left
+    end
+    if root.right
+      queue << root.right
+    end
+    puts queue
+  end
 
-    block.call(queue) if block_given?
-    queue.each_with_index do |node, index|
-      queue << node.left unless node.left.nil? 
-      queue << node.right unless node.right.nil?
-    end 
+  def pretty_print(node = @root, prefix = '', is_left = true)
+    pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
+    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
+    pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
   end
 end
-#    q_len = queue.length - 1
-arr = Array.new(50) { rand(1..100) }
-arr.sort!.uniq!
-bst = Tree.new(arr, 0, arr.length - 1)
-bst.traversal { |queue| puts queue[1].data } 
+
+arr = Array.new(10) { rand(1..100) }
+puts arr.sort.uniq
+bst = Tree.new(arr.sort.uniq, 0, arr.length - 1)
 
 
 #  def tree_height(current = root, l_height = 0, r_height = 0)
